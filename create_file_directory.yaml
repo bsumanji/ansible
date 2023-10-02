@@ -1,0 +1,20 @@
+---
+- hosts: host1
+  become: true
+  become_user: root
+
+  tasks:
+    - name: Create directory
+      file:
+        name: /home/bsuman/ansible
+        state: directory
+        owner: suman
+        group: netops
+        mode: '1777'
+    
+    - name : Create file
+      file:
+        name: /home/bsuman/ansible/test.txt
+        state:  touch
+
+    
