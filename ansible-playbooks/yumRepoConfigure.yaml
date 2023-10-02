@@ -1,0 +1,30 @@
+---
+- hosts: host2
+  become: true
+  become_user: root
+
+  tasks:
+  - name: Mounting ISO
+    mount:
+      src: /dev/sr0
+      path: /mount
+      state: mounted
+      fstype: iso9660
+
+  - name: Creating yum repository for app
+    yum_repository:
+      file: linux
+      name: apprepo
+      description: app
+      baseurl: file:/mount/AppStream
+      enabled: true
+      gpgkey: false
+
+  - name: Creating yum repository for base
+    yum_repository:
+      file: linux
+      name: baserepo
+      description: base
+      baseurl: file:/mount/BaseOS
+      enabled: true
+
