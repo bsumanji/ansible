@@ -1,0 +1,17 @@
+---
+- hosts:  host1
+  become: true
+  become_user:  root
+
+  tasks:
+  - name: Create groups
+    group:
+      name: avengers
+      state:  present
+
+  - name: Create users
+    user:
+      name: ironman
+      state: present
+      groups: avengers
+
