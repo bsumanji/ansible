@@ -1,0 +1,26 @@
+---
+- hosts: host1
+  become: true
+  become_user: root
+
+  tasks:
+  - name: Creating partition
+    parted:
+      device: /dev/nvme0n2
+      number: 1
+      state: present
+      part_end: 15GiB
+
+  - name: Formating partition
+    filesystem:
+      dev: /dev/nvme0n2p1
+      fstype: xfs
+      force: yes
+
+  - name: Mounting Partition
+    mount:
+      src: /dev/nvme0n2p1
+      path: /partition
+      fstype: xfs
+      state: mounted
+
