@@ -1,5 +1,5 @@
 ---
-- hosts: host1
+- hosts: redhosts
   become: true
   become_user: root
 
@@ -11,8 +11,15 @@
      state: mounted
      fstype: iso9660
     when: ansible_nodename == "host1"
-    tags:
-      -mounthost1
+
+
+  - name: mounting host2
+    mount:
+     src: /dev/sr0
+     path: /rhel9
+     state: mounted
+     fstype: iso9660
+    when: ansible_nodename == "host2"
 
   - name: Install packages
     yum:
@@ -25,12 +32,10 @@
      state: started
      enabled: true
 
-  - name : Permit in firewall
+  - name : configuring firewall
     firewalld:
       service: http
       permanent: true
       immediate: yes
       state: enabled
-    tags:
-    - firewall
 

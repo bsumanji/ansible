@@ -10,9 +10,6 @@
      path: /mount
      state: mounted
      fstype: iso9660
-    when: ansible_nodename == "host1"
-    tags:
-      -mounthost1
 
   - name: Install packages
     yum:
