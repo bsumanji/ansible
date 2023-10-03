@@ -17,3 +17,10 @@
       dest: /home/bsuman/ansible/group.tar
       owner: suman
       group: netops
+
+  - name: Unarchiving file
+    unarchive:
+      src: /home/bsuman/ansible/group.tar
+      dest: /home/bsuman/
+      remote_src: yes
+    tags: unzip
