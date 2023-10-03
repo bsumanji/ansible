@@ -1,22 +1,13 @@
 ---
-- hosts: redhosts
+- hosts: localhost-2
   become: true
   become_user: root
 
   tasks:
-  - name: mounting host1
+  - name: mounting localhost-2
     mount:
      src: /dev/sr0
      path: /mount
-     state: mounted
-     fstype: iso9660
-    when: ansible_nodename == "localhost-1"
-
-
-  - name: mounting host2
-    mount:
-     src: /dev/sr0
-     path: /rhel9
      state: mounted
      fstype: iso9660
     when: ansible_nodename == "localhost-2"
