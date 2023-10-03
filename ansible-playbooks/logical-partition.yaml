@@ -38,3 +38,13 @@
       resizefs: true
     tags:
       - extend
+
+  - name: Reduce
+    lvol:
+      vg: vg1
+      lv: lv1
+      size: 10G
+      resizefs: true
+      force: yes
+    tags:
+      -reduce

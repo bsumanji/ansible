@@ -10,7 +10,7 @@
      path: /mount
      state: mounted
      fstype: iso9660
-    when: ansible_nodename == "host1"
+    when: ansible_nodename == "localhost-1"
 
 
   - name: mounting host2
@@ -19,7 +19,7 @@
      path: /rhel9
      state: mounted
      fstype: iso9660
-    when: ansible_nodename == "host2"
+    when: ansible_nodename == "localhost-2"
 
   - name: Install packages
     yum:
