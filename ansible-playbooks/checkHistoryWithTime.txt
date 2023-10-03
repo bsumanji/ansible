@@ -1,4 +1,4 @@
-# .bashrc
+i# .bashrc
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
@@ -29,6 +29,7 @@ unset rc
 # Customize history format with timestamps
 HISTTIMEFORMAT='%F %T '
 
-#To apply the changes immediately, either close and reopen your terminal or run:
+##To apply the changes immediately, either close and reopen your terminal or run:
 #source ~/.bashrc
 
+#root has different .bashrc
