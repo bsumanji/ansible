@@ -7,7 +7,7 @@
   - name: mounting host1
     mount:
      src: /dev/sr0
-     path: /mount
+     path: /mount-sr0
      state: mounted
      fstype: iso9660
     when: ansible_nodename == "localhost-1"
