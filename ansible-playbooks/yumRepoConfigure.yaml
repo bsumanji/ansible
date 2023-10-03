@@ -27,4 +27,3 @@
       description: base
       baseurl: file:/mount/BaseOS
       enabled: true
-
