@@ -30,3 +30,11 @@
       fstype: xfs
       state: mounted
 
+  - name: Extending partition
+    lvol:
+      vg: vg1
+      lv: lv1
+      size: +100%FREE
+      resizefs: true
+    tags:
+      - extend
