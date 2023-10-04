@@ -16,7 +16,7 @@
       file: linux
       name: apprepo
       description: app
-      baseurl: file:/mount/AppStream
+      baseurl: file:///mount/AppStream
       enabled: true
       gpgkey: false
 
@@ -25,5 +25,6 @@
       file: linux
       name: baserepo
       description: base
-      baseurl: file:/mount/BaseOS
+      baseurl: file:///mount/BaseOS
       enabled: true
+      gpgkey: false
