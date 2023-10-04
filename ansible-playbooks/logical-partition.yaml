@@ -1,5 +1,5 @@
 ---
-- hosts: host1
+- hosts: redhosts
   become: true
   become_user: root
 
@@ -20,17 +20,17 @@
   - name: Formating the volume
     filesystem:
       dev: /dev/vg1/lv1
-      fstype: xfs
+      fstype: ext4
       force: yes
 
   - name: Mounting the volume partition
     mount:
       src: /dev/vg1/lv1
       path: /logical-partition
-      fstype: xfs
+      fstype: ext4
       state: mounted
 
-  - name: Extending partition
+  - name: Extendin/g partition
     lvol:
       vg: vg1
       lv: lv1
@@ -38,6 +38,15 @@
       resizefs: true
     tags:
       - extend
+
+  - name: Unmounting partitoin
+    mount:
+      src: /dev/vg1/lv1
+      path: /logical-partition
+      fstype: ext4
+      state: unmounted
+    tags:
+      - umount
 
   - name: Reduce
     lvol:
