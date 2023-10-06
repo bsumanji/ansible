@@ -1,0 +1,33 @@
+---
+- hosts: all
+  become: true
+  become_user: root
+
+  tasks:
+  - name: Adding new entry in file
+    lineinfile:
+      path: /etc/hosts
+      line: '192.168.1.240 www.example.com'
+      line: '192.168.1.241 www.example.com'
+
+  - name: Inserting entry between lines
+    lineinfile:
+      path: /etc/hosts
+      line: '#this is demo of inserted entry between line'
+      insertafter: '::1'
+
+  - name: Replacing line
+    replace:
+      path: /etc/hosts
+      regexp: 'this is demo of inserted entry between line'
+      replace: '#this is replaced line'
+  
+  - name: deleting line
+    lineinfile:
+      path: /etc/hosts
+      regexp: '#this is demo of inserted entry between line'
+      state: absent
+    tags:
+      -remove
+    
+
