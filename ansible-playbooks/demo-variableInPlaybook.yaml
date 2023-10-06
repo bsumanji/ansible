@@ -1,0 +1,28 @@
+---
+- hosts: redhosts
+  become: true
+  become_user: root
+
+
+  vars:
+  - toInstall: vsftpd,tree, git, httpd
+  - isoPath: /dev/sr0
+  - mountPoint: /mount
+
+  tasks:
+  - name: Mounting ISO
+    mount: 
+      src: "{{ isoPath }}"
+      path: "{{ mountPoint }}"
+      state: mounted
+      fstype: iso9660
+    tags:
+    - mount
+
+  - name: Installing Services
+    yum:
+      name: "{{ toInstall }}"
+      state: latest 
+    tags:
+    - setservice
+
