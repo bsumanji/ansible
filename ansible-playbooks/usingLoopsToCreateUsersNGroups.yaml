@@ -1,0 +1,31 @@
+---
+- hosts: all
+  become: true
+  become_user: root
+
+  tasks:
+  - name: Creating Groups
+    group:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - techgeeks
+      - marvel
+      - dcuniverse
+
+  - name: Creating users and adding to groups
+    user:
+     name : "{{ item.name }}"
+     state: present
+     groups: "{{ item.groups }}"
+    loop:
+      - { name: "elon", groups: "techgeeks" }
+      - { name: "mark", groups: "techgeeks" }
+      - { name: "jeff", groups: "techgeeks" }
+      - { name: "hugh", groups: "marvel" }
+      - { name: "chris", groups: "marvel" }
+      - { name: "robert", groups: "marvel" }
+      - { name: "jason", groups: "dcuniverse" }
+      - { name: "ben", groups: "dcuniverse" }
+      - { name: "clerk", groups: "dcuniverse"}
+
