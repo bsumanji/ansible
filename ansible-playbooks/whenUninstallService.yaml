@@ -1,0 +1,27 @@
+---
+- hosts: all
+  become: true
+  become_user: root
+
+  tasks:
+  - name: Uninstalling services to group redhosts
+    yum:
+      name: "{{ item }} "
+      state: absent
+    loop:
+    - tree
+    - httpd
+    - vsftpd
+    - git
+    when: inventory_hostname in groups['redhosts']
+
+  - name: Uninstalling services to group ubuntuhosts
+    apt:
+      name: "{{ item }} "
+      state: absent
+    loop:
+    - tree
+    - apache2
+    - vsftpd
+    - git
+    when: inventory_hostname in groups['ubuntuhosts']
