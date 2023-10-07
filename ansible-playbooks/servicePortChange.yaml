@@ -1,0 +1,33 @@
+---
+- hosts: redhosts
+  become: true
+  become_user: root
+
+  tasks:
+  - name: Installing httpd
+    yum:
+      name: httpd
+      state: latest
+
+  - name: Changing default port to new
+    replace:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: 'Listen 80'
+      replace: 'Listen 82'
+
+  - name: Permitting in selinux
+    seport:
+      ports: 82
+      proto: tcp
+      setype: http_port_t
+      state: present
+
+  - name: Permitting in firewall
+    firewalld:
+      port: 82/tcp
+      state: enabled
+      immediate: yes
+      permanent: true
+
+
+    
