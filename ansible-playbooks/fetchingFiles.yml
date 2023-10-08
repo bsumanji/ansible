@@ -1,0 +1,13 @@
+---
+- hosts: redhosts
+  become: true
+  become_user: root
+
+  tasks:
+  - name: fetching files
+    fetch:
+      src: /home/fetchingfile.txt
+      dest: /home/bsuman/
+      # this will exclude parent directory and fetch only a file specifically
+      flat: yes
+
