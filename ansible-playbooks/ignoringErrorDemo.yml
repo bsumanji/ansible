@@ -1,0 +1,20 @@
+---
+- hosts: localhost-1
+  become: true
+  become_user: root
+  ignore_errors: yes
+
+  tasks:
+  - name: fetching files
+    fetch:
+      src: /home/fetchingfile1.txt
+      dest: /home/bsuman
+      # this will exclude parent directory and fetch only a file specifically
+      flat: yes
+
+  - name: Mounting ISO
+    mount:
+      src: /dev/sr0
+      path: /mount
+      fstype: iso9660
+      state: mounted
