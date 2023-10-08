@@ -1,0 +1,11 @@
+---
+- hosts: redhosts
+  become: true
+  become_user: root
+
+
+  tasks:
+  - name: Copying files with content
+    copy:
+      dest: /home/file.txt
+      content: "Ansible Lab"
