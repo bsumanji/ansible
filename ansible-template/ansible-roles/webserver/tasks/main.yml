@@ -1,0 +1,7 @@
+---
+# tasks file for webserver
+- include: mountISO.yml
+- include: installHttpd.yml
+- include: httpdServiceInitialize.yml
+- include: httpdFirewall.yml
+- include: copyHttpdIndex.yml

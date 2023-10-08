@@ -1,0 +1,8 @@
+---
+- name: Permitting httpd in firewall
+  firewalld:
+    service: http
+    state: enabled
+    permanent: true
+    immediate: yes
+

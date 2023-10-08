@@ -1,0 +1,7 @@
+--- 
+- name: Mounting ISO file
+  mount:
+    src: /dev/sr0
+    path: /mount
+    state: mounted
+    fstype: iso9660
