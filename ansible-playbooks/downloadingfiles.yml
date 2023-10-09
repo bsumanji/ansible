@@ -1,0 +1,12 @@
+---
+- hosts: redhosts
+  become: true
+  become_user: root
+
+  tasks:
+  - name: Downloading files
+    get_url:
+      url: https://releases.ansible.com/ansible/ansible-2.9.25.tar.gz
+      dest: /home/bsuman/downloadedFile
+
+
