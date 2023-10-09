@@ -1,0 +1,26 @@
+---
+- hosts: redhosts
+  become: true
+  become_user: root
+
+  tasks:
+  - name: creating cron job
+    cron:
+      name: "{{ item.name }}"
+      state: present
+      minute: '*'
+      hour: '23'
+      month: '*'
+      day: '*'
+      weekday: '*'
+      job: "{{ item.job }}"
+      
+      #The specific user whose crontab should be modified
+      user: bsuman
+
+    loop:
+      - { name: "date Job", job: "/usr/bin/date > /home/bsuman/utilization.txt"}
+      - { name: "disk free Job", job: "/usr/bin/df -TH >> /home/bsuman/utilization.txt" }
+      - { name: "CPU usage Job", job: "/usr/bin/top -b -n 1 | /usr/bin/grep Cpu >> /home/bsuman/utilization.txt" }
+      - { name: "Memory usage Job", job: "/usr/bin/free -h >> /home/bsuman/utilization.txt" }
+
