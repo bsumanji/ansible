@@ -1,0 +1,26 @@
+---
+- hosts: redhosts
+  become: true
+  become_user: root
+  ignore_errors: yes
+
+  tasks:
+  - name: Check if package is installed or not
+    command: yum list installed git
+    register: package_check
+
+  - name: Print message if git is not installed
+    debug:
+      msg: "Git is not installed"
+    when: package_check is failed
+
+  - name: print if git is installed
+    debug:
+      msg: "Git is installed"
+    when: package_check is succeeded
+
+  - name: Installing git
+    yum:
+      name: git
+      state: latest
+    when: package_check is failed   
