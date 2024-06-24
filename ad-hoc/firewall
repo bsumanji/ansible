@@ -1,0 +1,1 @@
+ansible -m firewalld -a "permanent=true state=enabled immediate=yes service=http" redhosts -b -K 

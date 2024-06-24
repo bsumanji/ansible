@@ -1,0 +1,3 @@
+#This will create directory /mnt/rhel9, mounts the source to it, then writes in /etc/fstab
+
+ansible -m mount -a " src=/dev/sr0 path=/mnt/rhel9 fstype=iso9660 state=mounted " redhosts -b -K 

@@ -1,0 +1,6 @@
+
+
+#Two lines are mandotory for AppStream and BaseOS
+
+ansible -m yum_repository -a " file=yum name=AppRepo description=AppStream baseurl=http://192.168.0.149/rhel9/AppStream enabled=1 gpgcheck=0 " redhosts -b -K 
+ansible -m yum_repository -a " file=yum name=BaseRepo description=BaseOS baseurl=http://192.168.0.149/rhel9/BaseOS enabled=1 gpgcheck=0 " redhosts -b -K

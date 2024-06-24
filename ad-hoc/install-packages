@@ -1,0 +1,11 @@
+#Below are to just install only the packages.
+
+ansible -m yum -a " name=httpd state=present " redhosts -b -K
+ansible -m yum -a " name=nfs* state=present " redhosts -b -K
+
+
+
+#Below are to install, enable, start the packages.
+
+ansible -m service -a " name=httpd state=started enabled=true " redhosts -b -K
+
