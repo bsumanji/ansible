@@ -1,0 +1,21 @@
+---
+- hosts: redhosts
+  become_user: root
+  become: true
+
+  tasks:
+    - name: creating group called sales
+      group:
+        name: sales
+        state: present
+
+    - name: creating user sansa with supplementary roup sales
+      user:
+        name: sansa
+          #state: present
+
+        #Using 'groups' will add a user to a group as supplementary
+        #But using 'group' will add a user to primary group
+        groups: sales
+
+          #append: yes
