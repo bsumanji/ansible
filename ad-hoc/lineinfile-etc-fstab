@@ -1,0 +1,1 @@
+ansible -m lineinfile -a "path=/etc/fstab regexp='^/dev/nvme0n2p2' state=absent" redhosts 
