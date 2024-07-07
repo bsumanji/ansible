@@ -1,0 +1,95 @@
+---
+- hosts: redhosts
+  become: true
+  become_user: root
+
+
+
+    
+  tasks:
+    - name: Creating a new primary partition with a size of 1G
+      parted:
+        device: /dev/nvme0n2
+        number: 1
+        state: present
+        part_end: 1GiB
+        flags: LVM
+      tags:
+        - part1
+
+
+    - name: Creating a next partition with a size of 2G
+      parted:
+        device: /dev/nvme0n2
+        number: 2
+        state: present
+        part_start: 1GiB   # size start =1GiB (immediately after the end of Partition 1)
+        part_end: 3GiB     # Size: 2GiB (3GiB - 1GiB)
+        flags: LVM
+      tags:
+        - part2
+
+
+    - name: Creating a third partition with a size of 1G 
+      parted:
+        device: /dev/nvme0n2
+        number: 3
+        state: present
+        part_start: 3GiB  # size start = 3GiB (immediately after the end of Partition 2)
+        part_end: 4GiB    #Size: 1GiB (4GiB - 3GiB).
+        flags: LVM
+      tags:
+        - part3
+
+
+
+# Visual Representation
+    
+#|-----------------------------------|
+#|       Partition 1 (1GiB)          |
+#|-----------------------------------|
+#|       Partition 2 (2GiB)          |
+#|-----------------------------------|
+#|       Partition 3 (1GiB)          |
+#|-----------------------------------|
+#|       Partition 4 (remaining)     |
+#|-----------------------------------|
+
+
+    - name: Creating a last partition with a 100%FREE remaining size 
+      parted:
+        device: /dev/nvme0n2
+        number: 4
+        state: present
+        part_start: 4GiB
+        part_end: "100%" 
+        flags: LVM
+      tags:
+        - part4
+
+
+    - name: creating a mounting point 'partition2'
+      file:
+        name: /mnt/partition2
+        state: directory
+      tags:
+        - mtpoint
+
+    - name: Formatting filesystem to partition
+      filesystem:
+        device: /dev/nvme0n2p2
+        fstype: xfs
+        force: yes
+      tags:
+        - partition
+
+    - name: mounting partition to mount point 'partition2'
+      mount:
+        state: mounted
+        src: /dev/nvme0n2p2
+        path: /mnt/partition2
+        fstype: xfs
+      tags:
+        - mount
+
+    
