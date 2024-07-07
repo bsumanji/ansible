@@ -1,0 +1,44 @@
+---
+- hosts: redhosts
+  become: true
+  become_user: root
+
+  tasks:
+    - name: creating a folder called 'destination'
+      file:
+        name: ~/destination
+        state: directory
+
+    - name: creating a folder called 'folder10'
+      file:
+        name: ~/folder10
+        state: directory
+
+    - name: creating a folder called 'testfolder'
+      file:
+        name: ~/testfolder
+        state: directory
+
+    - name: copying file '/etc/fstab' to 'destination' folder
+      copy:
+        src: /etc/passwd
+        dest: ~/destination
+    
+
+    - name: copying folder 'folder10' to destination folder 'destination'
+      copy:
+        src: /root/folder10
+        dest: /root/destination
+
+          # remote_src: yes = directory from its current location on the remote host to the destination folder on the same remote host. 
+          # Else, by default, the copy module assumes that the source file or directory is on the local machine (the Ansible controller). 
+
+        remote_src: yes 
+
+
+    - name: Moving folder 'folder10' into a destinaation folder 'destination'
+
+      # move module do not exists
+
+      command: mv -f /root/testfolder /root/destination
+
