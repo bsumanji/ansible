@@ -1,0 +1,24 @@
+---
+- hosts: redhosts
+  become: true
+  become_user: root
+
+  tasks:
+    - name: creating a mount point
+      file:
+        name: /mnt/partition
+        state: directory
+          
+    - name: Create a xfs filesystem on /dev/nvme0n2
+      filesystem:
+        fstype: xfs
+        dev: /dev/nvme0n2
+     
+    - name: mounting to mount point
+      mount:
+        src: /dev/nvme0n2
+        path: /mnt/partition
+        state: mounted
+        fstype: xfs 
+
+
