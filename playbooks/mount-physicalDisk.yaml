@@ -3,6 +3,9 @@
   become: true
   become_user: root
 
+
+    # mounting a whole disk 
+
   tasks:
     - name: creating a mount point
       file:
