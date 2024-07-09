@@ -1,0 +1,31 @@
+---
+- hosts: redhosts
+  become: true
+  become_user: root
+
+  tasks:
+    - name: Creating a physical partition first '/dev/nvme0n2p3'
+      parted:
+        device: /dev/nvme0n2
+        number: 3
+        state: present
+        part_start: 4GiB
+        part_end: "100%"
+        flags: [ swap ]
+
+    - name: formating physical partition with swap
+      shell: "mkswap -f /dev/nvme0n2p3"
+
+    - name: activating swap partiton to swap memory
+      shell: "swapon /dev/nvme0n2p3"
+
+    - name: adding changes in /etc/fstab
+      lineinfile:
+        path: /etc/fstab
+        line: '/dev/nvme0n2p3 swap swap defaults 0 0'
+        create: yes
+      tags:
+        - fstab
+
+
+
