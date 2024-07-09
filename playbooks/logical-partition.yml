@@ -1,0 +1,124 @@
+---
+- hosts: redhosts
+  become: true
+  become_user: root
+
+  tasks:
+    - name: Initiating by creating physical partion '/dev/nvme0n2p1'
+      parted:
+        device: /dev/nvme0n2
+        number: 1
+        part_end: 1.5GiB
+        state: present
+        flags: [ lvm ]
+
+    - name: Creating a volume group 'vg1' on '/dev/nvme0n2p1'
+      lvg:
+        pvs: /dev/nvme0n2p1
+        vg: vg1
+      tags:
+        - vgroup
+
+
+    - name: Creating logical volume 'lv1' 
+      lvol:
+        vg: vg1
+        lv: lv1
+        size: 512M
+        state: present
+      tags:
+        - lvm
+
+    - name: formating logical volume
+      filesystem:
+        device: /dev/vg1/lv1
+        fstype: ext4
+      tags:
+        - format
+
+
+    - name: creating mount point '/mnt/lvm-partition'
+      file:
+        name: /mnt/lvm-partition
+        state: directory
+      tags:
+        - mtpoint
+
+    - name: mounting logical volume
+      mount:
+        src: /dev/vg1/lv1
+        path: /mnt/lvm-partition
+        state: mounted
+        fstype: ext4
+      tags:
+        - mount
+
+
+    - name: Extending the logical volume to 800M
+      lvol:
+        vg: vg1
+        lv: lv1
+        size: 800M
+        state: present
+      tags:
+        - extend
+
+
+          # online reducing does not support, so it requrires to unmount the volume and then to reduce the size
+
+
+    - name: unmounting logical volume to reduce size
+      mount:
+        src: /dev/vg1/lv1
+        path: /mnt/lvm-partition
+        state: absent
+      tags:
+        - unmount
+
+    - name: Reducing the logical volume to 700M
+      lvol:
+        lv: lv1
+        vg: vg1
+        size: 700M
+        resizefs: yes
+        force: true
+      tags:
+        - reduce
+          
+
+    - name: remounting logical volume
+      mount:
+        src: /dev/vg1/lv1
+        path: /mnt/lvm-partition
+        state: mounted
+        fstype: ext4
+      tags:
+        - mount
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
