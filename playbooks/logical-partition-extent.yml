@@ -1,0 +1,58 @@
+---
+- hosts: redhosts
+  become: true
+  become_user: root
+
+
+    # 
+    # Needs to rewrite a playbook again. Logical volume extent not working here.
+    #
+    
+
+  tasks:
+    - name: initializing by creating physical partition '/dev/nvme0n2p1'
+      parted:
+        device: /dev/nvme0n2
+        number: 1
+        part_end: 1GiB
+        state: present
+        flags: [ lvm ]
+
+    - name: creating volume group 'vg1'
+      lvg:
+        pvs: /dev/nvme0n2p1
+        vg: vg1
+        pesize: 16                                    # using the extend size here
+        size: 
+        state: present
+
+    - name: creating logical volume 'lv1'
+      lvol:
+        lv: lv1
+        vg: vg1
+        size: 50
+        force: true
+        state: present
+
+    - name: formating the logical volume '/dev/vg1/lv1'
+      filesystem:
+        device: /dev/vg1/lv1
+        fstype: ext4
+
+
+    - name: creating a mount point '/mnt/lvm'
+      file:
+        name: /mnt/lvm
+        state: directory
+
+    - name: mounting logical volume to mount point
+      mount:
+        src: /dev/vg1/lv1
+        path: /mnt/lvm
+        fstype: ext4
+        state: mounted
+
+
+
+      
+
