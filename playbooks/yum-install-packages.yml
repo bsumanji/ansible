@@ -1,0 +1,72 @@
+---
+- hosts: redhosts
+  become: true
+  become_user: root
+
+  vars:
+    - packages: http*, chrony*, vsftp*, nfs*, autofs*
+    
+
+
+      # below written service shouldn't be written in lists as mentioned above in packages.
+      # The service module expects a single service name, not a list.
+      #
+      # You need to iterate over the list of services to start and enable them individually.
+      # as you do it individually in shell like = systemctl enable httpd.service
+      #
+      # The same applies to the firewall configuration.
+      # as you do it in shell like = firewall-cmd --permanent -add-service=http
+
+    - services: 
+      - httpd 
+      - chronyd 
+      - vsftpd
+      - nfs-server
+      - autofs
+
+    - firewall: 
+      - http
+      - ntp           # ntp for chronyd
+      - ftp           # ftp for vsftpd
+      - nfs
+      - rpc-bind
+      - mountd
+        #- autofs     #autofs is not recognized as valid service in firewalld
+
+  tasks:
+    - name: installing packages
+      yum:
+        name: "{{ packages }}"
+        state: latest
+      tags:
+        - install
+
+
+    - name: starting and enabling installed packages
+      service: 
+        name: "{{ item }}"
+        state: started
+        enabled: true
+      loop: "{{ services }}"
+      tags:
+        - service
+
+
+    - name: allowing packages in firewall
+      firewalld:
+        service: "{{ item }}"
+        permanent: true
+        state: enabled 
+      loop: "{{ firewall }}"
+      tags:
+        - firewall
+
+                    # Services cannot be reloaded in a same task.
+                    # so need to reload firewall separtely.
+
+    - name: reloading firewall
+      shell: firewall-cmd --reload
+      tags:
+        - reload
+          
+      
