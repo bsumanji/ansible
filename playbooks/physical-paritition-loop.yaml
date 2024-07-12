@@ -1,0 +1,74 @@
+---
+- hosts: redhosts
+  become: true
+  become_user: root
+
+
+  vars:
+    - partname: /dev/nvme0n2p2 
+    - mpoint: /mnt/partition2
+    - fs: xfs
+
+
+  tasks:
+    - name: Creating a partitions 
+      parted:
+        device: /dev/nvme0n2
+        number: "{{ item.number }}"
+        state: present
+        part_start: "{{ item.start }}"
+        part_end: "{{ item.end }}"
+        flags: LVM
+      loop:
+        - { number: "1", start: "1MiB" , end: "1GiB" } 
+          # The closest location parted utility can manage is 0.50kiB to 1048576kiB.
+          # The first few sectors are often reserved for the Master Boot Record (MBR) or GPT header.
+
+        - { number: "2", start: "1GiB" , end: "3GiB" } # size = 2GiB ( 3GiB -1GiB )
+        - { number: "3", start: "3GiB" , end: "4GiB" } # size = 1GiB ( 4GiB -3GiB )
+        - { number: "4", start: "4GiB" , end: "100%" } # remainng size 100% starting after 4GiB partition 3.
+      tags:
+        - partition
+
+
+
+
+# Visual Representation
+    
+#|-----------------------------------|
+#|       Partition 1 (1GiB)          |
+#|-----------------------------------|
+#|       Partition 2 (2GiB)          |
+#|-----------------------------------|
+#|       Partition 3 (1GiB)          |
+#|-----------------------------------|
+#|       Partition 4 (remaining)     |
+#|-----------------------------------|
+
+
+
+    - name: creating a mounting point "{{ mpoint }}"
+      file:
+        name: "{{ mpoint }}"
+        state: directory
+      tags:
+        - mtpoint
+
+    - name: Formatting filesystem to partition
+      filesystem:
+        device: "{{ partname }}"
+        fstype: "{{ fs }}"
+        force: yes
+      tags:
+        - partition
+
+    - name: mounting partition to mount point "{{ mpoint }}"
+      mount:
+        state: mounted
+        src: "{{ partname }}"
+        path: "{{ mpoint }}"
+        fstype: "{{ fs }}"
+      tags:
+        - mount
+
+    

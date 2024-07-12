@@ -1,0 +1,132 @@
+---
+- hosts: redhosts
+  become: true
+  become_user: root
+
+
+  vars:
+    - vgroup: vg1 
+    - lvolume: lv1
+    - fs: ext4
+    - devname: /dev/vg1/lv1
+    - mpoint: /mnt/lvm-partition
+
+  tasks:
+    - name: Initiating by creating physical partion '/dev/nvme0n2p1'
+      parted:
+        device: /dev/nvme0n2
+        number: 1
+        part_end: 1.5GiB
+        state: present
+        flags: [ lvm ]
+
+    - name: Creating a volume group '"{{ vgroup }}"' on '/dev/nvme0n2p1'
+      lvg:
+        pvs: /dev/nvme0n2p1
+        vg: "{{ vgroup }}"
+      tags:
+        - vgroup
+
+
+    - name: Creating logical volume '"{{ lvolume }}"' 
+      lvol:
+        vg: "{{ vgroup }}"
+        lv: "{{ lvolume }}"
+        size: 512M
+        state: present
+      tags:
+        - lvm
+
+    - name: formating logical volume
+      filesystem:
+        device: "{{ devname }}"
+        fstype: "{{ fs }}"
+      tags:
+        - format
+
+
+    - name: creating mount point '"{{ mpoint }}"'
+      file:
+        name: "{{ mpoint }}"
+        state: directory
+      tags:
+        - mtpoint
+
+    - name: mounting logical volume
+      mount:
+        src: "{{ devname }}"
+        path: "{{ mpoint }}"
+        state: mounted
+        fstype: "{{ fs }}"
+      tags:
+        - mount
+
+
+    - name: Extending the logical volume to 800M
+      lvol:
+        vg: "{{ vgroup }}"
+        lv: "{{ lvolume }}"
+        size: 800M
+        state: present
+      tags:
+        - extend
+
+
+          # online reducing does not support, so it requrires to unmount the volume and then to reduce the size
+
+
+    - name: unmounting logical volume to reduce size
+      mount:
+        src: "{{ devname }}"
+        path: "{{ mpoint }}"
+        state: absent
+      tags:
+        - unmount
+
+    - name: Reducing the logical volume to 700M
+      lvol:
+        lv: "{{ lvolume }}"
+        vg: "{{ vgroup }}"
+        size: 700M
+        resizefs: yes
+        force: true
+      tags:
+        - reduce
+          
+
+    - name: remounting logical volume
+      mount:
+        src: "{{ devname }}"
+        path: "{{ mpoint }}"
+        state: mounted
+        fstype: "{{ fs }}"
+      tags:
+        - mount
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
