@@ -77,7 +77,7 @@
    # + indicates that it should match one or more of the preceding token.
 
 
-    - name: commenting existing port number in /etc/httpd/conf/httpd.conf
+    - name: uncommenting existing port number in /etc/httpd/conf/httpd.conf
       lineinfile:
         path: /root/httpd.conf
         regexp: '^#\s+(Listen.*)'
