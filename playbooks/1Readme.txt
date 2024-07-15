@@ -24,7 +24,7 @@
 
 12. Using Loops to create users and groups:-------------------"usingLoopsToCreateUsersNGroups.yaml"
 
-13. Editing file:---------------------------------------------"fileHandlingSimple.yaml"
+13. Editing file:(add, insert, replace, comment, uncomment, delete lines) ----------------------------"fileHandlingSimple.yaml"
 
 14. downloading file:-----------------------------------------"downloadingfiles.yml"
 
