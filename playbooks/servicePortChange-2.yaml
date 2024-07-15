@@ -1,0 +1,64 @@
+---
+- hosts: redhosts
+  become: true
+  become_user: root
+
+  tasks:
+    - name: commenting existing port number in /etc/httpd/conf/httpd.conf
+      lineinfile:
+        path: /etc/httpd/conf/httpd.conf
+        regexp: '(?i)^(Listen.*)'
+        line: '# \1'     
+        backrefs: yes
+        state: present
+      tags:
+        - cmt
+
+   # Alternatively you can use --> regexp: '(?i)^(Listen\s+\d+)'
+   # '\1' refers to the text matched by the entire Listen directive that was matched by the regexp).
+   # \s is a shorthand character class that matches any whitespace character
+   # \d is a shorthand character class that matches any digit (0-9)
+   # + indicates that it should match one or more of the preceding token.
+
+
+    - name: adding port to config file httpd.conf
+      lineinfile:
+        path: /etc/httpd/conf/httpd.conf
+        insertafter: '^#Listen'
+        line: 'Listen 82'
+        state: present
+      tags:
+        - addport
+
+
+    - name: adding port to selinux
+      seport:
+        ports: 82
+        proto: tcp
+        setype: http_port_t
+        state: present
+      tags:
+        - semanage
+        
+    - name: allowing port in firewall
+      firewalld:
+        port: 82/tcp
+        permanent: true
+        state: enabled
+      tags:
+        - firewall
+
+
+    - name: reloading firewall
+      shell: firewall-cmd --reload
+      tags:
+        - reload
+
+
+    - name: restarting httpd service
+      service:
+        name: httpd
+        state: restarted
+      tags:
+        - restart
+
