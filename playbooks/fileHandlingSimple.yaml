@@ -1,33 +1,62 @@
 ---
-- hosts: all
+- hosts: redhosts
   become: true
   become_user: root
 
   tasks:
-  - name: Adding new entry in file
-    lineinfile:
-      path: /etc/hosts
-      line: '192.168.1.240 www.example.com'
-      line: '192.168.1.241 www.example.com'
+    - name: inserting new lines block in a file
+      blockinfile:
+        path: /etc/hosts
+        block: |                #Contains the block of lines to insert into the file.
+                                #The '|' character allows multi-line block formatting in YAML. 
+          #this is first new line
+          #this is second new line
+        marker: ""
+      tags:
+        - new
 
-  - name: Inserting entry between lines
-    lineinfile:
-      path: /etc/hosts
-      line: '#this is demo of inserted entry between line'
-      insertafter: '::1'
+    - name: inserting line in between
+      lineinfile:
+        path: /etc/hosts
+        line: '#this is inserted line in between'
+        state: present
+        insertafter: '^127.0.0.1'
+      tags:
+        - betwn
 
-  - name: Replacing line
-    replace:
-      path: /etc/hosts
-      regexp: 'this is demo of inserted entry between line'
-      replace: '#this is replaced line'
-  
-  - name: deleting line
-    lineinfile:
-      path: /etc/hosts
-      regexp: '#this is demo of inserted entry between line'
-      state: absent
-    tags:
-      -remove
-    
 
+          # Method 1 to replace line
+
+
+    - name: replacing first added line
+      lineinfile:
+        path: /etc/hosts
+        line: '#this is a first replaced line'
+        regexp: '#this is first new line'
+        state: present
+      tags:
+        - replace1
+
+
+          # Method 2 to replace line
+
+    - name: replacing second added line
+      replace:
+        path: /etc/hosts
+        regexp: '#this is second new line'
+        replace: '#this is a second replaced line'
+      tags:
+        - replace2
+        
+
+    - name: deleting line
+      lineinfile:
+        path: /etc/hosts
+        regexp: '^#this is'
+        state: absent
+      tags:
+        - delete
+
+
+
+        
