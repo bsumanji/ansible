@@ -1,0 +1,74 @@
+---
+- hosts: redhosts
+  become: true
+  become_user: root
+
+  tasks:
+
+
+    - name: initiating by creating copy of a path
+      copy:
+        src: /usr/local/lib64
+        dest: /tmp/
+      tags: 
+        - copy
+
+    - name: archiving file /usr/local/lib64
+      archive:
+        path: /tmp/lib64             #for this path tar file does not lose actual size; and extracting file will also not lose data
+        #path: /usr/local/lib64/       #for this path tar file loses actual size; tar file cannot find in the dest as specified below in 'unarchive'; also loses data after extracting
+        #path: /usr/local/lib64       # for this path tar file loses actual size; tar file may find in the dest as specified below in 'unarchive' ; also loses data after extracting
+
+        dest: /root/lib64.tar   #or ~/lib64.tar
+        format: tar
+        force_archive: yes
+      tags:
+        - tar
+
+
+    
+          # register and debug 
+    
+    
+    - name: listing contents of archive
+      shell: tar -tvf /root/lib64.tar
+      register: tar_content
+      tags:
+        - list
+
+    - debug:
+        var: tar_content.stdout
+      tags:
+        - list
+
+
+
+
+
+    - name: unarchiving file ~/lib64.tar
+      unarchive:
+        src: /root/lib64.tar
+        dest: /root/
+        remote_src: yes
+      tags:
+        - extract
+
+
+    - name: compressing file 
+      archive:
+        path: /tmp/lib64
+        dest: ~/lib64.gz
+        format: gz
+      tags:
+        - gzip
+
+
+    - name: uncompressing file
+      unarchive:
+        src: ~/lib64.gz
+        dest: ~/
+        remote_src: yes
+      tags:
+        - gunzip
+
+    
