@@ -97,4 +97,49 @@
         - addport
 
 
-        
+
+          ################### Commenting and uncommenting lines #######################
+
+    - name: Backup the /etc/sudoers file
+      copy:
+        src: /etc/sudoers
+        dest: /etc/sudoers.bak
+        backup: yes
+      tags:
+        - backup
+
+
+    - name: Add one hash'#' to comment lines in /etc/sudoers
+      replace:
+        path: /etc/sudoers.bak
+        regexp: '^(.*)$'       # adds '#' in all lines even if present 
+        replace: '# \g<0>'
+      tags:
+        - cmt
+
+
+    - name: Comment all uncommented lines in /etc/sudoers
+      replace:
+        path: /etc/sudoers.bak
+        regexp: '^(?!#|\s*$)'       # comments lines that are started without hash
+        replace: '# \g<0>'
+      tags:
+        - cmt2
+
+
+    - name: Uncomment with first '#' in all commented lines in /etc/sudoers
+      replace:
+        path: /etc/sudoers.bak
+        regexp: '^#'                #uncomments by removing first hash only
+        replace: ''
+      tags:
+        - ucmt
+
+    - name: Uncomment all commented lines in /etc/sudoers
+      replace:
+        path: /etc/sudoers.bak
+        regexp: '^#\s*'             #uncomments all lines removing every hashes
+        replace: ''
+      tags:
+        - ucmt2
+
