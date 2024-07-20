@@ -70,7 +70,7 @@
       tags:
         - cmt
 
-   # Alternatively you can use --> regexp: '(?i)^(Listen\s+\d+)'
+   # Alternatively, when preceeding expression is spaces and digit, you can use --> regexp: '(?i)^(Listen\s+\d+)'
    # '\1' refers to the text matched by the entire Listen directive that was matched by the regexp).
    # \s is a shorthand character class that matches any whitespace character
    # \d is a shorthand character class that matches any digit (0-9)
@@ -80,7 +80,7 @@
     - name: uncommenting existing port number in /etc/httpd/conf/httpd.conf
       lineinfile:
         path: /root/httpd.conf
-        regexp: '^#\s+(Listen.*)'
+        regexp: '^#\s*(Listen.*)'
         line: '\1'     
         backrefs: yes
         state: present
