@@ -12,7 +12,8 @@
     - name: creating user sansa with supplementary roup sales
       user:
         name: sansa
-          #state: present
+        state: present
+        password: "{{ 'redhat' | password_hash('sha512') }}"
 
         #Using 'groups' will add a user to a group as supplementary
         #But using 'group' will add a user to primary group
