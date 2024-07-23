@@ -42,3 +42,10 @@
 
       command: mv -f /root/testfolder /root/destination
 
+    - name: copying file with content
+      copy:
+        content: " This is content written from ansible controller node"
+        dest: /tmp/testfile.txt
+      tags:
+        - content
+
