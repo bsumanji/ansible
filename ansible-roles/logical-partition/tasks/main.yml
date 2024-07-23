@@ -1,0 +1,8 @@
+---
+# tasks file for logical-partition
+
+- include: partition.yml
+- include: vggroup.yml
+- include: lvolume.yml
+- include: filesystem.yml
+- include: mount.yml

@@ -1,0 +1,14 @@
+---
+- name: installing chrony service
+  yum:
+    name: chrony*
+    state: latest
+
+- name: enable and start service
+  service:
+    state: started
+    enabled: true
+    name: chronyd
+
+- name: setting ntp true
+  shell: timedatectl set-ntp true

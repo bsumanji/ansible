@@ -1,0 +1,5 @@
+---
+- name: copying template httpd.j2 to remote hosts
+  template:
+    src: httpd.j2
+    dest: /etc/httpd/conf/httpd.conf

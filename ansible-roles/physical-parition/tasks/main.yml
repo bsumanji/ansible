@@ -1,0 +1,7 @@
+---
+# tasks file for physical-parition
+
+- include: partition.yml
+- include: filesystem.yml 
+- include: mountpoint.yml
+- include: mounting.yml

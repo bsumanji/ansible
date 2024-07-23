@@ -1,0 +1,7 @@
+---
+- hosts: redhosts
+  become: true
+  become_user: root
+
+  roles:
+    - physical-parition

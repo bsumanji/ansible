@@ -1,0 +1,11 @@
+- name: creating mounting point /mnt/lvm
+  file:
+    name: /mnt/lvm
+    state: directory
+
+- name: mounting logical volume to /mnt/lvm
+  mount:
+    state: mounted
+    src: /dev/vg1/lv1
+    path: /mnt/lvm
+    fstype: ext4

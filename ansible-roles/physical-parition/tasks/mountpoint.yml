@@ -1,0 +1,6 @@
+---
+- name: creating mountpoint /mnt/partition4
+  file:
+    name: /mnt/partition4
+    state: directory
+

@@ -1,0 +1,11 @@
+---
+- name: allowing port in selinux
+  seport:
+    state: present
+    setype: http_port_t
+    proto: tcp
+    port: {{ new_port }}
+  tags:
+    - selinux
+
+

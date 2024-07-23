@@ -1,0 +1,5 @@
+- name: creating logical volume
+  lvol:
+    lv: lv1
+    vg: vg1
+    size: 512M

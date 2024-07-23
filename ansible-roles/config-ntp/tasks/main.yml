@@ -1,0 +1,6 @@
+---
+# tasks file for config-ntp
+#
+- include: install-chrony.yml
+- include: templating.yml
+- include: restart-service.yml

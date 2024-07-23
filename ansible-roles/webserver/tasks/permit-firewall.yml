@@ -1,0 +1,12 @@
+---
+- name: allowing http in firewall
+  firewalld:
+    service: http
+    permanent: true
+    state: enabled
+  tags: 
+    -firewall
+
+- name: reloading firewall
+  shell: firewall-cmd --reload
+

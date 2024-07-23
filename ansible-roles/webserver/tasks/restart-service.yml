@@ -1,0 +1,6 @@
+---
+- name: enabling and restarting service.
+  service:
+    enabled: true
+    state: restarted
+    name: httpd

@@ -1,0 +1,9 @@
+---
+- name: creating a physical partition first
+  parted:
+    device: /dev/nvme0n2
+    number: 1
+    flags: [ lvm ]
+    state: present
+    part_start: 1MiB
+    part_end: 1GiB

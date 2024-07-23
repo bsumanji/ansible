@@ -1,0 +1,5 @@
+- name: creating volume group on /dev/nvme0n2p1
+  lvg:
+    pvs: /dev/nvme0n2p1
+    vg: vg1
+    state: present

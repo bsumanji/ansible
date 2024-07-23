@@ -1,0 +1,7 @@
+---
+- name: mounting partition to /mnt/partition4
+  mount:
+    src: /dev/nvme0n2p4
+    path: /mnt/partition4
+    state: mounted
+    fstype: ext4

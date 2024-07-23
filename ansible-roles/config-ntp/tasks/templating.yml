@@ -1,0 +1,5 @@
+- name: copying chrony.conf template to hosts
+  template:
+    src: chrony.j2
+    dest: /etc/chrony.conf
+    force: true

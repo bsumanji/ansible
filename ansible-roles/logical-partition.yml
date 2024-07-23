@@ -4,4 +4,4 @@
   become_user: root
 
   roles:
-  - webserver
+    - logical-partition

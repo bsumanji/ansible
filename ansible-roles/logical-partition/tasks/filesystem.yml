@@ -1,0 +1,4 @@
+- name: formating filesystem to /dev/nvme0n2p1
+  filesystem:
+    device: /dev/vg1/lv1
+    fstype: ext4

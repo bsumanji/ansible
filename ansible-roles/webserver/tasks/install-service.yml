@@ -1,5 +1,6 @@
 ---
-- name: installing httpd
+- name: installing http package
   yum:
     name: httpd
     state: latest
+

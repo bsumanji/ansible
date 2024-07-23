@@ -1,2 +1,4 @@
 ---
 # vars file for webserver
+
+new_port: 8080

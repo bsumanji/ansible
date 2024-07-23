@@ -1,0 +1,5 @@
+- name: restarting chrony service
+  service:
+    name: chronyd
+    state: restarted
+

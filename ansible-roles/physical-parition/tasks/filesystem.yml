@@ -1,0 +1,6 @@
+---
+- name: formating filesystem to /dev/nvme0n2p4
+  filesystem:
+    device: /dev/nvme0n2p4
+    fstype: ext4
+    force: true
