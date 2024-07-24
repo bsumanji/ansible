@@ -1,0 +1,30 @@
+---
+- hosts: redhosts
+  become: true
+  become_user: root
+
+  vars:
+    users:
+      - name: user1
+        password: "{{ 'password1' | password_hash('sha512') }}"
+      - name: user2
+        password: "{{ 'password2' | password_hash('sha512') }}"
+      - name: user3
+        password: "{{ 'password3' | password_hash('sha512') }}"
+
+  tasks:
+    - name: Create users with passwords
+      user:
+        name: "{{ item.name }}"
+        password: "{{ item.password }}"
+        state: present
+      loop: "{{ users }}"
+
+    - name: Verify users created
+      shell: tail -5 /etc/passwd
+      register: passwd_output
+
+    - name: Display the result
+      debug:
+        var: passwd_output.stdout_lines
+
