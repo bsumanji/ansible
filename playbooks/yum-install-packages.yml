@@ -57,16 +57,9 @@
         service: "{{ item }}"
         permanent: true
         state: enabled 
+        immediate: yes    # reloads firewall (firewall-cmd --reload)
       loop: "{{ firewall }}"
       tags:
         - firewall
-
-                    # Services cannot be reloaded in a same task.
-                    # so need to reload firewall separtely.
-
-    - name: reloading firewall
-      shell: firewall-cmd --reload
-      tags:
-        - reload
           
       

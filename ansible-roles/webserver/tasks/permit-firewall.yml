@@ -4,9 +4,8 @@
     service: http
     permanent: true
     state: enabled
+    immediate: yes # reloads firewall (firewall-cmd --reload)
   tags: 
     -firewall
 
-- name: reloading firewall
-  shell: firewall-cmd --reload
 
