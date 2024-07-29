@@ -1,0 +1,44 @@
+- hosts: dev, test
+
+  vars_files:
+    - /home/student/ansible/user_list.yml
+    - /home/student/ansible/vault.yml
+
+  tasks:
+    - name: creating group 'system'
+      group:
+        name: system
+        state: present
+
+    - name: creating users 
+      user:
+        name: "{{ item.name }}"
+        groups: system
+        state: present
+        password: "{{ pw_sysadmin | password_hash('sha512') }}"
+        password_expire_max: "{{ item.password_expire }}" 
+      loop: "{{ myusers }}"
+      when: item.job == "sysadmin"
+
+
+- hosts: test
+
+  vars_files:
+    - /home/student/ansible/user_list.yml
+    - /home/student/ansible/vault.yml
+
+  tasks:
+    - name: creating group 'network'
+      group:
+        name: network
+        state: present
+
+    - name: creating users
+      user:
+        name: "{{ item.name }}"
+        groups: network
+        password: "{{ pw_netadmin | password_hash('sha512') }}"
+        password_expire_max: "{{ item.password_expire }}"
+      loop: "{{ myusers }}"
+      when: item.job == "netadmin" 
+

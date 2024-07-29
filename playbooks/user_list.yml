@@ -1,0 +1,17 @@
+myusers:
+  - name: harry
+    job: sysadmin
+    password_expire: 10
+
+  - name: peter
+    job: netadmin
+    password_expire: 10
+
+  - name: roger
+    job: sysadmin
+    password_expire: 10
+
+  - name: sansa
+    job: netadmin
+    password_expire: 10
+
