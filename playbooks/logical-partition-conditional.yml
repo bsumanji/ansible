@@ -1,0 +1,50 @@
+- name: checking vg 'research' with 1500M+ size requirement and creating lv 'data' in all nodes
+  hosts: all
+
+    # Before running below tasks, create volume group 'research' in managed nodes with different size
+    #
+
+  tasks:
+
+    - block:
+
+        - name: when volume group 'research' does not exist
+          debug:
+            msg: "vg not found"
+          when: ansible_lvm.vgs.research is not defined
+
+        - block:
+
+            - name: when volume group 'research' exists and space is <1500M
+              debug:
+                msg: "Insufficient size of vg"
+              when: ansible_lvm.vgs.research.size_g < "1500MiB"
+
+            - name: creating volume group 'research' with size 1500M
+              lvol:
+                vg: research
+                lv: data
+                size: 1500M
+              when: ansible_lvm.vgs.research.size_g > "1500MiB"
+
+          when: ansible_lvm.vgs.research is defined
+
+
+
+    - name: formatting logical volume
+      filesystem:
+        device: /dev/research/data
+        fstype: ext4
+      when: ansible_lvm.vgs.research.data is defined
+
+        
+
+
+
+
+
+
+
+
+
+  
