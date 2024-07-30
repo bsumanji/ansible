@@ -1,7 +1,23 @@
 [redhosts]
-localhost-1
-localhost-2
+node1
+node2
 
 [ubuntuhosts]
-ubuntuServer
+host1
+
+[dev]
+servera.lab.example.com
+
+[test]
+serverb.lab.example.com
+
+[prod]
+serverc.lab.example.com
+
+[balancers]
+serverd.lab.example.com
+
+[webservers:children]
+prod
+
 
