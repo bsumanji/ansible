@@ -1,0 +1,26 @@
+- hosts: all
+
+  tasks:
+    - name: downloading hwreport.txt
+      get_url:
+        url: http://172.22.0.149/hwreport.txt
+        dest: /root
+        force: yes
+
+    - name: editing file as a template
+      lineinfile:
+        path: /root/hwreport.txt
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      loop:
+        - { regexp: "^HOSTNAME", line: "HOSTNAME= {{ ansible_hostname }}" }
+        - { regexp: "^MEMORY", line: "MEMORY = {{ ansible_memtotal_mb }}" }
+        - { regexp: "^BIOS", line: "BIOS = {{ ansible_bios_version }}" }
+        - { regexp: "^CPU", line: "CPU = {{ ansible_processor }}" }
+        - { regexp: "^DISK_SIZE_VDA", line: "DISK_SIZE_VDA = {{ ansible_devices.nvme0n1.size | default('NONE') }}" }
+        - { regexp: "^DISK_SIZE_VDB", line: "DISK_SIZE_VDB = {{ ansible_devices.nvme0n2.size | default('NONE') }}" }
+        - { regexp: "^DISK_SIZE_VDC", line: "DISK_SIZE_VDC = {{ ansible_devices.nvme0n3.size | default('NONE') }}" }
+        - { regexp: "^DISK_SIZE_VDD", line: "DISK_SIZE_VDD = {{ ansible_devices.nvme0n4.size | default('NONE') }}" }
+
+
+
