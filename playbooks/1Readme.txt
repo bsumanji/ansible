@@ -60,3 +60,4 @@
 
 22. Collecting hardware reports: ------------------------------"hwreport.yml"
 
+23. Composing /etc/hosts file: --------------------------------"myhosts.yml"
