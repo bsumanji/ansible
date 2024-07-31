@@ -1,0 +1,20 @@
+# hosts.yml
+---
+- name: Update /etc/myhosts on all dev group nodes
+  hosts: all
+  gather_facts: yes
+  become: yes
+
+  tasks:
+    - name: Gather all node information
+      setup:
+        gather_subset: "all"
+
+    - name: Template the /etc/myhosts file
+      template:
+        src: myhosts.j2
+        dest: /etc/myhosts
+        owner: root
+        group: root
+        mode: '0644'
+
