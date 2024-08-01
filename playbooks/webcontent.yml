@@ -1,0 +1,48 @@
+---
+- hosts: dev
+
+  tasks:
+    - name: creating a directory /devweb
+      file:
+        name: /devweb
+        group: apache
+        owner: student
+          #mode: u=rwx,g=rwxs,o=rw
+        mode: '02775'
+        state: directory
+        setype: httpd_sys_content_t
+
+    - name: creating /devweb/index.html file
+      file:
+        name: /devweb/index.html
+        state: touch
+
+    - name: composing file
+      copy:
+        content: "Development"
+        dest: /devweb/index.html
+
+    - name: linking /devweb to /var/www/html/devweb
+      file:
+        src: /devweb
+        dest: /var/www/html/devweb
+        owner: student
+        group: apache
+        state: link
+
+
+    - name: restarting web service
+      service:
+        name: httpd
+        state: restarted
+        enabled: true
+
+    - name: permitting in firewall
+      firewalld:
+        service: http
+        state: enabled
+        permanent: true
+        immediate: true
+
+
+
