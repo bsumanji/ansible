@@ -2,10 +2,12 @@
 ---
 - name: Update /etc/myhosts on all dev group nodes
   hosts: all
+    ## hosts: all is required because it collects the facts of all hosts from inventory
   gather_facts: yes
   become: yes
 
   tasks:
+    # this play is not mandatory
     - name: Gather all node information
       setup:
         gather_subset: "all"
@@ -13,8 +15,9 @@
     - name: Template the /etc/myhosts file
       template:
         src: myhosts.j2
+          #src: myhosts-2.j2
         dest: /etc/myhosts
         owner: root
         group: root
         mode: '0644'
-
+      when: inventory_hostname in groups['dev']
