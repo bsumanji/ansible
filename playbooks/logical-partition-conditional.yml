@@ -5,46 +5,42 @@
     #
 
   tasks:
+    - name: checking if volume group 'research' exists
+      debug:
+        msg: volume group 'research' does not exist
+      when: ansible_lvm.vgs.research is not defined                
 
     - block:
+      - name: checking if 'research' size meets 1500MiB
+        debug:
+          msg: Insufficient space
+        when: ansible_lvm.vgs.research.free_g < "1500MiB"
 
-        - name: when volume group 'research' does not exist
+      - name: creating lv of 1500M when research volume > 1500MiB
+        lvol:
+            vg: research
+            lv: data
+            size: 1500M
+        when: ansible_lvm.vgs.research.free_g > "1500MiB"
+
+      - block:
+        - name: checking if 'research' size meets 800MiB
           debug:
-            msg: "vg not found"
-          when: ansible_lvm.vgs.research is not defined
+            msg: Insufficient space
+          when: ansible_lvm.vgs.research.free_g < "800MiB"
 
-        - block:
+        - name: creating volume of size 800MiB
+          lvol:
+            vg: research
+            lv: data
+            size: 800M
+        when: ansible_lvm.vgs.research.free_g < "1500MiB"
 
-            - name: when volume group 'research' exists and space is <1500M
-              debug:
-                msg: "Insufficient size of vg"
-              when: ansible_lvm.vgs.research.size_g < "1500MiB"
+      - name: formatting logical volume
+        filesystem:
+          device: /dev/research/data
+          fstype: ext4
 
-            - name: creating volume group 'research' with size 1500M
-              lvol:
-                vg: research
-                lv: data
-                size: 1500M
-              when: ansible_lvm.vgs.research.size_g > "1500MiB"
-
-          when: ansible_lvm.vgs.research is defined
+      when: ansible_lvm.vgs.research is defined
 
 
-
-    - name: formatting logical volume
-      filesystem:
-        device: /dev/research/data
-        fstype: ext4
-      when: ansible_lvm.vgs.research.data is defined
-
-        
-
-
-
-
-
-
-
-
-
-  
