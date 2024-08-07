@@ -32,7 +32,7 @@
 
 16. Archiving files: -----------------------------------------"archive-file.yaml"
 
-
+17. Using debug,rescue, always:-------------------------------"physical-paritition-conditional.yml"
 
 
 #####################################################################################
@@ -40,17 +40,17 @@
 #####################################################################################
 
 
-17. Mounting physical disk to system: ------------------------"mount-physicalDisk.yaml"
+18. Mounting physical disk to system: ------------------------"mount-physicalDisk.yaml"
 
-18. Physical Partition: --------------------------------------"physical-paritition.yaml"
+19. Physical Partition: --------------------------------------"physical-paritition.yaml"
 
-19. Swap Partition: ------------------------------------------"swap-partition.yml" 
+20. Swap Partition: ------------------------------------------"swap-partition.yml" 
 
-20. Multiple logical partition: ------------------------------"logical-partition.yml"
+21. Multiple logical partition: ------------------------------"logical-partition.yml"
 
-21. Logical Partition with extent: ---------------------------"logical-partition-extent.yml"
+22. Logical Partition with extent: ---------------------------"logical-partition-extent.yml"
 
-
+23. Conditional physical partiton:----------------------------"physical-paritition-conditional.yml"
 
 
 #####################################################################################
@@ -58,6 +58,6 @@
 #####################################################################################
 
 
-22. Collecting hardware reports: ------------------------------"hwreport.yml"
+24. Collecting hardware reports: ------------------------------"hwreport.yml"
 
-23. Composing /etc/hosts file: --------------------------------"myhosts.yml"
+25. Composing /etc/hosts file: --------------------------------"myhosts.yml"
