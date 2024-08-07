@@ -1,0 +1,36 @@
+---
+- hosts: ubuntu
+  become: true
+  become_user: root
+
+  tasks:
+    - name: updating apt package list
+      apt:
+        update_cache: yes
+
+
+    - name: updating timezone
+      timezone:
+        name: Asia/Kathmandu
+
+    - name: installing iputils and net-tools
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - iputils*
+        - net-tools
+        - aptitude
+
+    - name: upgrading all packages using aptitude
+      shell: "aptitude full-upgrade -y"
+      register: upgrade_output
+      changed_when: "'Need to get' in upgrade_output.stdout"
+
+    - name: Rebooting the system 
+      reboot:
+        msg: "Rebooting after a full system upgrade"
+        reboot_timeout: 5  #rebooting after 5 seconds
+      when: upgrade_output.changed
+
+
