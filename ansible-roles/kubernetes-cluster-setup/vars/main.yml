@@ -1,0 +1,5 @@
+---
+# vars file for kubernetes-cluster-setup
+
+include_vars: 
+  file: hosts_entries.yml

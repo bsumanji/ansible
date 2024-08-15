@@ -1,0 +1,8 @@
+---
+
+hosts_entries:
+  - " " ### to ensure gap before addding hosts
+  - 172.22.0.159 masternode.k8s.com masternode
+  - 172.22.0.160 workernode1.k8s.com workernode1
+  - 172.22.0.161 workernode2.k8s.com workernode2
+
