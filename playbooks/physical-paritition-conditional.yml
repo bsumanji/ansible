@@ -2,63 +2,50 @@
 - hosts: all
 
   tasks:
-    - name: checking and mounting block storage
-      block:
-      - name: checking if nvme0n2 partition exists
-        debug:
-          msg: nvme0n2 disk not found
-        when: "'nvme0n2' is not in ansible_devices"
-
-      - name: creating /dev/nvme0n2p1 with 1500MiB size
+    - block:
+      - name: creating /dev/nvme0n2p1 with 1600M size
         parted:
           device: /dev/nvme0n2
           number: 1
-          part_end: 1500MiB
           state: present
-        when: "'nvme0n2' is in ansible_devices"
+          part_end: 1600MiB
+        when: ansible_devices.nvme0n2.size >= "1.6BiB"
+
+      - name: when disk not created
+        debug:
+          msg: "insufficient size"
+        when: ansible_devices.nvme0n2.size < "1.6BiB"
+
+      - name: creating disk with 900M size
+        parted:
+          device: /dev/nvme0n2
+          number: 1
+          state: present
+          part_end: 900MiB
+      when: "'nvme0n2' is in ansible_devices"
 
       rescue:
-      - name: checking if nvme0n2 meets 1500MiB size
+      - name: check if disk exists
         debug:
-          msg: could not create partition of that size
-        when: "'nvme0n2p1' is not in ansible_devices"
-
-      - name: creating /dev/nvme0n2p1 with 800MiB size
-        parted:
-          device: /dev/nvme0n2
-          number: 1
-          part_end: 800MiB
-          state: present
-        when: "'nvme0n2p1' is not in ansible_devices"
+          msg: "Disk not found"
 
       always:
-      - name: formating #/dev/nvme0n2p1
-        filesystem:
-          device: /dev/nvme0n2p1
-          fstype: ext4
-          state: present
-            #when: "'nvme0n2p1' is in ansible_devices"
-        tags:
-          - format
+        - name: formating file system
+          filesystem:
+            device: /dev/nvme0n2p1
+            fstype: ext4
+            force: yes
 
-      - name: creating mount point /srv in 'dev' group 
-        file:
-          name: /srv
-          state: directory
-        when: inventory_hostname in groups['dev']
-        tags:
-          - mtpoint
+        - name: creating mount point
+          file:
+            name: /part
+            state: directory
 
-      - name: mounting /dev/nvme0n2p1 to /srv when 'dev' group exists
-        mount:
-          src: /dev/nvme0n2p1
-          path: /srv
-          state: mounted
-          fstype: ext4
-        when: inventory_hostname in groups['dev']
+        - name: mounting partition
+          mount:
+            src: /dev/nvme0n2p1
+            path: /part
+            fstype: ext4
+            state: mounted
 
-
-
-
-
-
+      
