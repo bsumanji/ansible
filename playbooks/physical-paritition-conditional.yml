@@ -2,50 +2,54 @@
 - hosts: all
 
   tasks:
+    - name: when disk is absent
+      debug:
+          msg: "Disk not found"
+      when: "'nvme0n2' is not in ansible_devices"
+
     - block:
-      - name: creating /dev/nvme0n2p1 with 1600M size
+
+      - name: creating partition /dev/nvme0n2p1 with 1600MiB size
         parted:
           device: /dev/nvme0n2
           number: 1
           state: present
           part_end: 1600MiB
-        when: ansible_devices.nvme0n2.size >= "1.6BiB"
+        when: ansible_devices.nvme0n2.size >= "1.6GiB"
 
       - name: when disk not created
         debug:
-          msg: "insufficient size"
-        when: ansible_devices.nvme0n2.size < "1.6BiB"
+          msg: "Insufficient Space"
+        when: ansible_devices.nvme0n2.size < "1.6GiB"
 
-      - name: creating disk with 900M size
+      - name: creating partition /dev/nvme0n2p1 with 900MiB size
         parted:
           device: /dev/nvme0n2
           number: 1
           state: present
           part_end: 900MiB
+        when: ansible_devices.nvme0n2.size < "1.6GiB"
+      
       when: "'nvme0n2' is in ansible_devices"
-
-      rescue:
-      - name: check if disk exists
-        debug:
-          msg: "Disk not found"
-
+          
       always:
-        - name: formating file system
+        - name: formating partition with 'ext4'
           filesystem:
             device: /dev/nvme0n2p1
             fstype: ext4
             force: yes
 
-        - name: creating mount point
+        - name: creating mounting point
           file:
-            name: /part
+            name: /physical
             state: directory
 
         - name: mounting partition
           mount:
             src: /dev/nvme0n2p1
-            path: /part
-            fstype: ext4
+            path: /physical
             state: mounted
+            fstype: ext4
 
-      
+
+
