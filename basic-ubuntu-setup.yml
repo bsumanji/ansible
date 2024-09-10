@@ -15,7 +15,7 @@
 
     - name: modifying Shell Prompt to Show Basename of Directory
       replace:
-        path: /home/bsuman/.bashrc
+        path: /etc/skel/.bashrc
         regexp: '^(\s*PS1=.*)w(.*)'
         replace: '\1W\2'
 
