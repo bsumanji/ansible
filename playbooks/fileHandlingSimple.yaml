@@ -71,7 +71,9 @@
         - cmt
 
    # Alternatively, when preceeding expression is spaces and digit, you can use --> regexp: '(?i)^(Listen\s+\d+)'
+   # '\0' Refers to the entire matched string.
    # '\1' refers to the text matched by the entire Listen directive that was matched by the regexp).
+   # \1, \2, etc.: Refer to capturing groups defined in the regexp pattern. For example, if you had a pattern like ^(PS1=)(.*), then \1 would refer to PS1= and \2 would refer to the part after PS1=.
    # \s is a shorthand character class that matches any whitespace character
    # \d is a shorthand character class that matches any digit (0-9)
    # + indicates that it should match one or more of the preceding token.
