@@ -13,6 +13,17 @@
       timezone:
         name: Asia/Kathmandu
 
+    - name: modifying Shell Prompt to Show Basename of Directory
+      replace:
+        path: /home/bsuman/.bashrc
+        regexp: '^(\s*PS1=.*)w(.*)'
+        replace: '\1W\2'
+
+          # this above task will shorten the path to basename of directory as 
+          # bsuman@workernode1:basedirectory10$ pwd
+          #  /home/bsuman/test/f1/d1/basedirectory10
+
+
     - name: installing iputils and net-tools
       apt:
         name: "{{ item }}"
@@ -26,6 +37,7 @@
       shell: "aptitude full-upgrade -y"
       register: upgrade_output
       changed_when: "'Need to get' in upgrade_output.stdout"
+
 
     - name: Rebooting the system 
       reboot:
