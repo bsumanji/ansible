@@ -27,8 +27,14 @@
       register: upgrade_output
       changed_when: "'Need to get' in upgrade_output.stdout"
 
-    - name: Rebooting the system 
+    - name: Rebooting the hosts
       reboot:
         msg: "Rebooting after a full system upgrade"
-        reboot_timeout: 5  #rebooting after 5 seconds
+        reboot_timeout: 250  #waiting 250 seconds until host's back online
+      when: upgrade_output.changed
+
+    - name: Ensure the host is back online
+      wait_for_connection:
+        delay: 10
+        timeout: 250
       when: upgrade_output.changed
